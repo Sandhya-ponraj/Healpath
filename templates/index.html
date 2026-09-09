@@ -1,0 +1,313 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HealPath - AI Coping Companion</title>
+
+<style>
+body{
+    font-family: Arial, sans-serif;
+    background:#f4f7fc;
+    margin:0;
+    padding:20px;
+}
+.container{
+    max-width:700px;
+    margin:auto;
+    background:white;
+    padding:25px;
+    border-radius:12px;
+    box-shadow:0 0 10px rgba(0,0,0,0.1);
+}
+.page{
+    display:none;
+}
+.page.active{
+    display:block;
+}
+h2{
+    color:#2c3e50;
+}
+label{
+    display:block;
+    margin-top:10px;
+}
+input[type=text],
+textarea,
+select{
+    width:100%;
+    padding:10px;
+    margin-top:5px;
+    border:1px solid #ccc;
+    border-radius:6px;
+}
+textarea{
+    height:120px;
+}
+button{
+    background:#4CAF50;
+    color:white;
+    border:none;
+    padding:10px 20px;
+    margin-top:20px;
+    border-radius:6px;
+    cursor:pointer;
+}
+button:hover{
+    background:#45a049;
+}
+.radio-group{
+    margin-top:10px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<form id="healpathForm" method="POST" action="/submit">
+
+<!-- PAGE 1 -->
+<div class="page active">
+<h2>Basic Information</h2>
+
+<label>Name</label>
+<input type="text" name="name" required>
+
+<label>Gender</label>
+<div class="radio-group">
+<input type="radio" name="gender" value="Male"> Male
+<input type="radio" name="gender" value="Female"> Female
+<input type="radio" name="gender" value="Other"> Other
+</div>
+
+<label>Age Group</label>
+<div class="radio-group">
+<input type="radio" name="age" value="12-16"> 12-16
+<input type="radio" name="age" value="17-24"> 17-24
+</div>
+
+<label>Personality Type</label>
+<select name="personality">
+    <option>Introvert</option>
+    <option>Ambivert</option>
+    <option>Extrovert</option>
+    <option>Super Extrovert</option>
+</select>
+
+<button type="button" onclick="nextPage()">Next</button>
+</div>
+
+<!-- PAGE 2 -->
+<div class="page">
+<h2>Self Reflection</h2>
+
+<label>What are your weaknesses?</label>
+<textarea name="weaknesses" placeholder="Type your weaknesses"></textarea>
+
+<label>What are your strengths?</label>
+<textarea name="strengths" placeholder="Type your strengths"></textarea>
+
+<label>Describe a life experience that gave you a bad moment</label>
+<textarea name="bad_moment"></textarea>
+
+<label>Describe a life experience that gave you a good moment</label>
+<textarea name="good_moment"></textarea>
+
+<button type="button" onclick="prevPage()">Back</button>
+<button type="button" onclick="nextPage()">Next</button>
+</div>
+
+<!-- PAGE 3 -->
+<div class="page">
+<h2>Current Mood</h2>
+
+<label>How are you feeling today?</label>
+
+<input type="radio" name="mood" value="Sad"> Sad<br>
+<input type="radio" name="mood" value="Happy"> Happy<br>
+<input type="radio" name="mood" value="Lazy"> Lazy<br>
+<input type="radio" name="mood" value="Neutral"> Neutral<br>
+<input type="radio" name="mood" value="Stress"> Stress
+<label>Rate your feeling (1-5)</label>
+
+<select name="mood_score">
+<option>1</option>
+<option>2</option>
+<option>3</option>
+<option>4</option>
+<option>5</option>
+</select>
+
+<button type="button" onclick="prevPage()">Back</button>
+<button type="button" onclick="nextPage()">Next</button>
+</div>
+
+<!-- PAGE 4 -->
+<div class="page">
+<h2>Digital Habits</h2>
+
+<label>Daily Screen Time</label>
+<input type="text" name="screen_time" placeholder="Example: 6 hours">
+
+<label>How often do you use social media?</label>
+<select name="social_media_usage">
+<option>Rarely</option>
+<option>Sometimes</option>
+<option>Often</option>
+<option>Very Often</option>
+<option>Always</option>
+</select>
+
+<label>Do you lose sleep because of your phone?</label>
+<select name="phone_sleep_effect">
+<option>Never</option>
+<option>Rarely</option>
+<option>Sometimes</option>
+<option>Often</option>
+<option>Always</option>
+</select>
+
+<button type="button" onclick="prevPage()">Back</button>
+<button type="button" onclick="nextPage()">Next</button>
+</div>
+
+<!-- PAGE 5 -->
+<div class="page">
+<h2>Lifestyle Assessment</h2>
+
+<label>Sleep Hours</label>
+<input type="text" name="sleep_hours" placeholder="Example: 7 hours">
+
+<label>Physical Activity</label>
+<select name="physical_activity">
+<option>Never</option>
+<option>1-2 Times/Week</option>
+<option>3-4 Times/Week</option>
+<option>Daily</option>
+</select>
+
+<label>Water Intake</label>
+<select name="water_intake">
+<option>Less than 1 Litre</option>
+<option>1-2 Litres</option>
+<option>2-3 Litres</option>
+<option>More than 3 Litres</option>
+</select>
+
+<button type="button" onclick="prevPage()">Back</button>
+<button type="button" onclick="nextPage()">Next</button>
+</div>
+<!-- PAGE 6 -->
+<div class="page">
+
+<h2>Goals & Stress Assessment</h2>
+
+<label>Academic Goal</label>
+<textarea name="academic_goal"></textarea>
+
+<label>Personal Goal</label>
+<textarea name="personal_goal"></textarea>
+
+<label>Daily Tasks</label>
+<textarea name="daily_tasks"></textarea>
+
+<label>What is your biggest stress trigger?</label>
+
+<input type="radio" name="stress_trigger" value="Exams"> Exams<br>
+<input type="radio" name="stress_trigger" value="Assignments"> Assignments<br>
+<input type="radio" name="stress_trigger" value="Family Issues"> Family Issues<br>
+<input type="radio" name="stress_trigger" value="Relationships"> Relationships<br>
+<input type="radio" name="stress_trigger" value="Financial Concerns"> Financial Concerns<br>
+<input type="radio" name="stress_trigger" value="Career Worries"> Career Worries
+
+<br><br>
+
+<button type="button" onclick="prevPage()">Back</button>
+<button type="button" onclick="nextPage()">Next</button>
+
+</div>
+<!-- PAGE 7 -->
+<div class="page">
+
+<h2>Weekly Reflection</h2>
+
+<label>What went well this week?</label>
+<textarea name="weekly_success"></textarea>
+
+<label>What challenged you this week?</label>
+<textarea name="weekly_challenge"></textarea>
+
+<label>How satisfied are you with your week?</label>
+
+<select name="week_satisfaction">
+<option>Very Unsatisfied</option>
+<option>Unsatisfied</option>
+<option>Neutral</option>
+<option>Satisfied</option>
+<option>Very Satisfied</option>
+</select>
+
+<h2>Emotion Check-In</h2>
+
+<label>Current Energy Level</label>
+
+<select name="energy_level">
+<option>Low</option>
+<option>Medium</option>
+<option>High</option>
+</select>
+
+<label>Current Motivation Level</label>
+
+<select name="motivation_level">
+<option>Low</option>
+<option>Medium</option>
+<option>High</option>
+</select>
+
+<button type="button" onclick="prevPage()">Back</button>
+<button type="submit">Submit</button>
+
+</div>
+
+</form>
+
+<div id="result" style="display:none;">
+<h2>Assessment Submitted Successfully!</h2>
+<p>Thank you for using HealPath.</p>
+<p>Your responses can now be analyzed to generate personalized coping suggestions.</p>
+</div>
+
+</div>
+
+<script>
+let currentPage = 0;
+const pages = document.querySelectorAll(".page");
+
+function showPage(index){
+    pages.forEach(page => page.classList.remove("active"));
+    pages[index].classList.add("active");
+}
+
+function nextPage(){
+    if(currentPage < pages.length - 1){
+        currentPage++;
+        showPage(currentPage);
+    }
+}
+
+function prevPage(){
+    if(currentPage > 0){
+        currentPage--;
+        showPage(currentPage);
+    }
+}
+
+
+</script>
+
+</body>
+</html>
