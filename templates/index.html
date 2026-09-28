@@ -304,6 +304,31 @@ function prevPage(){
     }
 }
 
+document.getElementById("healpathForm").addEventListener("submit", async function(event) {
+    event.preventDefault();
+
+    const formData = new FormData(this);
+
+    try {
+        const response = await fetch(this.action, {
+            method: "POST",
+            body: formData
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            document.getElementById("result").style.display = "block";
+        } else {
+            alert(result.message || "Failed to submit assessment.");
+        }
+
+    } catch (error) {
+        alert("Something went wrong. Please try again.");
+        console.error(error);
+    }
+});
+
 
 </script>
 
