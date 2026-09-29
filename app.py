@@ -123,7 +123,7 @@ def submit():
     <h2>Assessment Submitted Successfully!</h2>
     <h3>Thank You {name}</h3>
     <p>Your HealPath assessment has been saved successfully.</p>
-    <a href="/">Fill Another Response</a>
+    <a href="https://healpath-nghg.onrender.com/">Fill Another Response</a>
     """
 
 import os

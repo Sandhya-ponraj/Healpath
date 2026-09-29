@@ -67,14 +67,14 @@ button:hover{
 
 <div class="container">
 
-  <form id="healpathForm" method="POST" action="https://healpath-backend.onrender.com/submit">
+  <form id="healpathForm" method="POST" action="https://healpath-backend.onrender.com/submit" novalidate>
 
 <!-- PAGE 1 -->
 <div class="page active">
 <h2>Basic Information</h2>
 
 <label>Name</label>
-<input type="text" name="name" required>
+<input type="text" name="name">
 
 <label>Gender</label>
 <div class="radio-group">
@@ -276,7 +276,9 @@ button:hover{
 <div id="result" style="display:none;">
 <h2>Assessment Submitted Successfully!</h2>
 <p>Thank you for using HealPath.</p>
-<p>Your responses can now be anlyzed to generate personalized coping suggestions.</p>
+<p>Your responses can now be analyzed to generate personalized coping suggestions.</p>
+<h3>Your Personalized Suggestions</h3>
+<ul id="suggestions"></ul>
 </div>
 
 </div>
@@ -310,18 +312,54 @@ document.getElementById("healpathForm").addEventListener("submit", async functio
     const formData = new FormData(this);
 
     try {
-        const response = await fetch(this.action, {
+
+        // Save assessment to database
+        const saveResponse = await fetch(this.action, {
             method: "POST",
             body: formData
         });
 
-        const result = await response.json();
+        const saveResult = await saveResponse.json();
 
-        if (response.ok) {
-            document.getElementById("result").style.display = "block";
-        } else {
-            alert(result.message || "Failed to submit assessment.");
+        if (!saveResponse.ok) {
+            alert(saveResult.message || "Failed to submit assessment.");
+            return;
         }
+
+        // Convert form data to JSON
+        const data = Object.fromEntries(formData.entries());
+
+        // Send data for analysis
+        const analysisResponse = await fetch(
+            "https://healpath-backend-1.onrender.com/api/analyze",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            }
+        );
+
+        const analysisResult = await analysisResponse.json();
+
+        if (!analysisResponse.ok) {
+            alert(analysisResult.message || "Failed to analyze assessment.");
+            return;
+        }
+
+        // Show result section
+        document.getElementById("result").style.display = "block";
+
+        // Display personalized suggestions
+        const suggestionsList = document.getElementById("suggestions");
+        suggestionsList.innerHTML = "";
+
+        analysisResult.suggestions.forEach(function(suggestion) {
+            const li = document.createElement("li");
+            li.textContent = suggestion;
+            suggestionsList.appendChild(li);
+        });
 
     } catch (error) {
         alert("Something went wrong. Please try again.");
@@ -329,8 +367,10 @@ document.getElementById("healpathForm").addEventListener("submit", async functio
     }
 });
 
-
 </script>
 
 </body>
 </html>
+
+    
+
